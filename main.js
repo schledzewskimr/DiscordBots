@@ -7,14 +7,8 @@ client.on("ready", () => {
 })
 
 client.on("message", msg => {
-    if (msg.content === "ping") {
-        msg.reply("pong");
-    }
     if (msg.content.endsWith("?") && msg.content.length>1){
-        msg.reply("great question!")
-    }
-    if (msg.content.toLowerCase().startsWith("why")){
-        msg.reply("why not?")
+        msg.reply("great question " + msg.author.username + "!")
     }
     if (msg.content.includes("lol")){
         msg.react("😂")
