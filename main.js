@@ -1,14 +1,14 @@
 const Discord = require("discord.js");
 require('dotenv').config();
 const client = new Discord.Client({ intents: ["GUILDS", "GUILD_MESSAGES"] });
-const channel = client.channels.cache.get('id');
+const cron = require("cron");
 
 client.on("ready", () => {
     console.log(`Logged in as ${client.user.tag}!`)
 })
 
 client.on("messageCreate", msg => {
-    if (msg.content.endsWith("?") && msg.content.length>1){
+    if (msg.content.endsWith("?") && msg.content.length>1 && msg.content.includes("what" || "why" || "how" || "where" || "which" || "when" || "can")){
         const args = msg.content.split(/ +/);
         let searchTopic = args.join('+').slice(0,-1);
         for(let i = 0; i<searchTopic.length; i++){
@@ -38,5 +38,11 @@ client.on("messageCreate", msg => {
         }
     }
 })
+
+let scheduledMessage = new cron.CronJob('00 00 08-16 * * 1-5', () => {
+    let channel = client.channels.cache.get('id');
+    channel.send('You guys are awesome! keep it up!');
+});
+scheduledMessage.start();
 
 client.login(process.env.TOKEN)
