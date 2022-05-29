@@ -8,7 +8,17 @@ client.on("ready", () => {
 })
 
 client.on("messageCreate", msg => {
-    if (msg.content.endsWith("?") && msg.content.length>1 && msg.content.includes("what" || "why" || "how" || "where" || "which" || "when" || "can")){
+    //if interrogative statement ends in "?" will google that
+    if (msg.content.endsWith("?") && msg.content.length>1
+        && (msg.content.includes("what")
+            || msg.content.includes("why")
+            || msg.content.includes("how")
+            || msg.content.includes("where")
+            || msg.content.includes("which")
+            || msg.content.includes("when")
+            || msg.content.includes("can")
+            || msg.content.includes("is"))
+        ){
         const args = msg.content.split(/ +/);
         let searchTopic = args.join('+').slice(0,-1);
         for(let i = 0; i<searchTopic.length; i++){
@@ -25,11 +35,15 @@ client.on("messageCreate", msg => {
             .setAuthor({ name: msg.author.username, iconURL: 'https://static.wikia.nocookie.net/parody/images/5/5b/Profile_-_Donkey.jpg/revision/latest?cb=20200804211128', url: googleResult })
             .setDescription(msg.author.username + ' had a question.')
             .setThumbnail('https://static.wikia.nocookie.net/parody/images/5/5b/Profile_-_Donkey.jpg/revision/latest?cb=20200804211128')
-            msg.channel.send({embeds: [embed]});
+        msg.channel.send("That's a great question " + msg.author.username + "! I did a quick google and found this:")
+        msg.channel.send({embeds: [embed]});
     }
+    // anytime "lol" is said it will react
     if (msg.content.includes("lol")){
         msg.react("😂")
     }
+    // type "setupVote x" where x is 1-9 for voteemojis
+    // MAKE THIS BETTER
     if (msg.content.startsWith("setupVote")){
         const reactions = ["🎃","🤖","👽","👾","👻","💎","🦍","🚀","🍔"]
         let options = msg.content.slice(msg.content.length-1);
@@ -38,7 +52,7 @@ client.on("messageCreate", msg => {
         }
     }
 })
-
+// mon through fri 8-4 will send this message
 let scheduledMessage = new cron.CronJob('00 00 08-16 * * 1-5', () => {
     let channel = client.channels.cache.get('id');
     channel.send('You guys are awesome! keep it up!');
